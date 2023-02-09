@@ -1,5 +1,3 @@
-from .Tamil import Tamil
-
 import nltk
 import re
 
@@ -25,7 +23,7 @@ class TamilGrammer:
         words_new = []
 
         for x in self.tokenized_words:
-        
+
             last = x[len(x)-1]
             z = ord(last)
 
@@ -171,7 +169,7 @@ class TamilGrammer:
 
 
     def pronouns(self):
-        f = open("./DataBase/pronouns.txt","r",encoding="utf-8")
+        f = open("./TamilNLP/DataBase/pronouns.txt","r",encoding="utf-8")
 
         pronouns = f.readlines()
 
@@ -205,12 +203,12 @@ class TamilGrammer:
             eg=""
 
             for y in x:
-                if y in self.tamil.uyir: 
-                    ind = self.tamil.uyir.index(y)
+                if y in self.tamil.uyir_list: 
+                    ind = self.tamil.uyir_list.index(y)
                     eg+= eng1[ind]
                 
-                elif y in self.tamil.mei:
-                    ind = self.tamil.mei.index(y)
+                elif y in self.tamil.mei_list:
+                    ind = self.tamil.mei_list.index(y)
                     eg+= eng2[ind]+"a"
                 
                 elif ord(y)==3021:
@@ -227,8 +225,8 @@ class TamilGrammer:
     
     def root_word(self):
 
-        f1=open("./DataBase/Noun.txt","r")
-        f2=open("./DataBase/verb.txt","r")
+        f1=open("./TamilNLP/DataBase/Noun.txt","r")
+        f2=open("./TamilNLP/DataBase/verb.txt","r")
 
         nounList = f1.readlines()
         verbList = f1.readlines()
@@ -239,7 +237,7 @@ class TamilGrammer:
         for i in range(len(verbList)):
             verbList[i] = verbList[i].rstrip()
 
-        for x in list(self.englis_words.values):
+        for x in list(self.english_words.values()):
             if x in nounList:
                 print(x)
             elif x in verbList:
