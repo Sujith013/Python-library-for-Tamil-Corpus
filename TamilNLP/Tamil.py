@@ -17,6 +17,9 @@ class Tamil:
     sans=0
     uyirE=0
 
+    punctuators_count = 0
+    digits_count = 0
+
 
     #uyir eluthu
     uyir = list('அஆஇஈஉஊஎஏஐஒஓஔஃ')
@@ -42,6 +45,7 @@ class Tamil:
 
     def __init__(self,tamil_word) -> None:
         self._str = tamil_word
+
         #validate if it has proper tamil format encoding
         if not self.validate():
             raise ValueError("Not a proper Tamil encoding")
@@ -49,10 +53,15 @@ class Tamil:
         #segregate
         self.count_segregate()
 
-        #separating charcters
+        self.form_array()
+
+        self.set_character_info()
+    
+
+    def form_array(self):
         count = 0
 
-        for index,i in enumerate(self._str):
+        for i in self._str:
             
             if ord(i) in self.asc:
                 self._str_arr[count-1] += i
@@ -61,7 +70,7 @@ class Tamil:
                 count += 1
 
         self.length = count
-    
+
 
     def validate(self) -> bool:
 
@@ -85,14 +94,6 @@ class Tamil:
         return True
 
 
-    #incomplete
-    def replace(self,ch,new_ch):
-        self._str = self._str.replace(ch,new_ch)
-        #handle self._str_arr
-
-        return self._str
-
-
     def count_segregate(self):
       #character count
       for x in self._str:
@@ -112,6 +113,42 @@ class Tamil:
             self.sans+=1
 
 
+    def set_character_info(self):
+        self.digits_count = len(re.findall('[0-9]',self._str))
+        
+        plist = [",",";",":","/","\\","(",")","[","]","{","}","*","+","-","_","=","@","#","$","%","^","&","*","|","/","~","`","?",".","<",">","'","\"","‘","’"]
+
+        for i in self._str:
+            if i in plist:
+                self.punctuators_count += 1
+
+
+    def remove_punctuators(self):
+        self.punctuators_count = 0
+
+        plist = [",",";",":","/","\\","(",")","[","]","{","}","*","+","-","_","=","@","#","$","%","^","&","*","|","/","~","`","?",".","<",">","'","\"","‘","’"]
+        
+        for p in plist:
+            self._str = self._str.replace(p,"")
+
+        self.form_array()
+        
+        return self._str
+        
+
+    def remove_digits(self):
+        self.digits_count = 0
+
+        nlist = ['0','1','2','3','4','5','6','7','8','9']
+
+        for n in nlist:
+            self._str = self._str.replace(n,"")
+
+        self.form_array()
+        
+        return self._str
+
+
     def __str__(self):
         return self._str
 
@@ -128,28 +165,29 @@ class Tamil:
 
 
     def __setitem__(self,key,ch):
-      if key<self.length:
-        if len(ch)<=2:
-            if len(ch)==1:
-              if ord(ch) in self.asc:
-                  raise ValueError("Not a proper charcter")
-              else:
-                  self._str_arr[key] = ch
-                  self._str = "".join(self._str_arr)
+        #if empty ch remove the index
+        if key<self.length:
+            if len(ch)<=2:
+                if len(ch)==1:
+                    if ord(ch) in self.asc:
+                        raise ValueError("Not a proper charcter")
+                    else:
+                        self._str_arr[key] = ch
+                        self._str = "".join(self._str_arr)
 
+                else:
+                    if (ord(ch[0]) in self.asc and ord(ch[1]) in self.asc) or (ord(ch[0]) not in self.asc and ord(ch[1]) not in self.asc):
+                        raise ValueError("Not a valid character")
+                    
+                    if ord(ch[0]) in self.asc:
+                        raise ValueError("Not a valid Tamil Character")
+                
+                    self._str_arr[key] = ch
+                    self._str = "".join(self._str_arr)
             else:
-              if (ord(ch[0]) in self.asc and ord(ch[1]) in self.asc) or (ord(ch[0]) not in self.asc and ord(ch[1]) not in self.asc):
-                raise ValueError("Not a valid character")
-              
-              if ord(ch[0]) in self.asc:
-                raise ValueError("Not a valid Tamil Character")
-              
-              self._str_arr[key] = ch
-              self._str = "".join(self._str_arr)
+                raise ValueError("Only Character is allowed")
         else:
-          raise ValueError("Only Character is allowed")
-      else:
-        raise ValueError("Index Out of Bound")
+            raise ValueError("Index Out of Bound")
 
 
     def __iter__(self):
@@ -157,7 +195,3 @@ class Tamil:
         for i in self._str_arr:
             yield i
 
-#Punctuators, signs and symbols and digits
-tamil_input= Tamil("ஏதென்சு மிகவும்")
-
-print(tamil_input)
