@@ -1,43 +1,39 @@
 import re
-import nltk
-import string
-import os
-
-# nltk.download('punkt')
-
 
 class Tamil:
     _str = ""
     _str_arr = []
     length = 0
 
-    vall=0
-    mel=0
-    idai=0
-    sans=0
-    uyirE=0
+    vallinam=0
+    mellinam=0
+    idayinam=0
+    sanskrit=0
+    uyir=0
+
+    total_characters=0
 
     punctuators_count = 0
     digits_count = 0
 
 
-    #uyir eluthu
-    uyir = list('அஆஇஈஉஊஎஏஐஒஓஔஃ')
+    #uyir_list eluthu
+    uyir_list = list('அஆஇஈஉஊஎஏஐஒஓஔஃ')
 
     #Mei eluthu
-    mei = ["க","ங","ச","ஞ","ட","ண","த","ந","ப","ம","ய","ர","ல","வ","ழ","ள","ற","ன"]
+    mei_list = ["க","ங","ச","ஞ","ட","ண","த","ந","ப","ம","ய","ர","ல","வ","ழ","ள","ற","ன"]
 
-    #vallinam
-    vallinam = ["க","ச","ட","த","ப","ற"]
+    #vallinam_list
+    vallinam_list = ["க","ச","ட","த","ப","ற"]
 
     #Mellinam
-    mellinam = ["ங","ஞ","ண","ந","ம","ன"]
+    mellinam_list = ["ங","ஞ","ண","ந","ம","ன"]
 
     #Idayinam
-    idayinam = ["ய","ர","ல","வ","ழ","ள"]
+    idayinam_list = ["ய","ர","ல","வ","ழ","ள"]
 
     #Sanskrit letters in tamil
-    sanskrit = ["ஸ","ஷ","ஜ","ஹ","க்ஷ","ஶ்ரீ","ஶ"]
+    sanskrit_list = ["ஸ","ஷ","ஜ","ஹ","க்ஷ","ஶ்ரீ","ஶ"]
 
     #Ascii values for the characters like "்", "ெ", "ோ", "ீ"
     asc = [3021,3006,3007,3008,3009,3010,3014,3015,3016,3018,3019,3020]
@@ -52,6 +48,8 @@ class Tamil:
         
         #segregate
         self.count_segregate()
+
+        self.total_characters = self.sanskrit+self.mellinam+self.uyir+self.vallinam+self.idayinam
 
         self.form_array()
 
@@ -97,20 +95,20 @@ class Tamil:
     def count_segregate(self):
       #character count
       for x in self._str:
-          if x in self.uyir:
-            self.uyirE+=1
+          if x in self.uyir_list:
+            self.uyir+=1
 
-          elif x in self.vallinam:
-            self.vall+=1
+          elif x in self.vallinam_list:
+            self.vallinam+=1
 
-          elif x in self.mellinam:
-            self.mel+=1
+          elif x in self.mellinam_list:
+            self.mellinam+=1
 
-          elif x in self.idayinam:
-            self.idai+=1
+          elif x in self.idayinam_list:
+            self.idayinam+=1
 
-          elif x in self.sanskrit:
-            self.sans+=1
+          elif x in self.sanskrit_list:
+            self.sanskrit+=1
 
 
     def set_character_info(self):
